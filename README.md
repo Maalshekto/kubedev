@@ -30,7 +30,8 @@ Ensure your host machine has the following software installed:
 ### Clone the Repository
 
    ```bash
-   git clone [https://github.com/yourusername/kubedev.git](https://github.com/Maalshekto/kubedev.git)
+   git clone https://github.com/yourusername/kubedev.git
+cd kubedev
    cd kubedev
    ```
 ### **Configure Parameters (Optional)**
