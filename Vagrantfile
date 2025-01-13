@@ -5,7 +5,7 @@ require 'yaml'
 
 # Load configuration from config.yml
 config_file = File.join(__dir__, 'config.yml')
-abort("Le fichier de configuration config.yml est introuvable.") unless File.exist?(config_file)
+abort("config.yml file not found !") unless File.exist?(config_file)
 config_data = YAML.load_file(config_file)
 
 # Assign configuration settings to variables
@@ -98,7 +98,7 @@ Vagrant.configure("2") do |config|
       master.vm.network "forwarded_port", guest: MASTER_CONFIG['forwarded_ports']['ssh_guest'], host: MASTER_CONFIG['forwarded_ports']['ssh_host_start']
     end
 
-    # Provisionnement avec un script séparé
+    # Provisioning with a separate script
     master.vm.provision "file", source: "provision/master.sh", destination: "/tmp/master.sh"
     master.vm.provision "shell", inline: <<-SHELL
       chmod +x /tmp/master.sh
@@ -113,7 +113,7 @@ Vagrant.configure("2") do |config|
     SHELL
   end
 
-  # Configuration des nœuds travailleurs
+  # Settings for the worker nodes
   (1..NUM_WORKERS).each do |i|
     config.vm.define "worker#{i}" do |worker|
       worker.vm.hostname = "#{WORKERS_CONFIG['base_hostname']}#{i}"
@@ -132,7 +132,7 @@ Vagrant.configure("2") do |config|
         worker.vm.network "forwarded_port", guest: WORKERS_CONFIG['forwarded_ports']['ssh_guest'], host: WORKERS_CONFIG['forwarded_ports']['ssh_host_start'] + (i - 1)
       end
 
-      # Provisionnement avec un script séparé
+      # Provisioning with a separate script
       worker.vm.provision "file", source: "provision/worker.sh", destination: "/tmp/worker.sh"
       worker.vm.provision "shell", inline: <<-SHELL
         chmod +x /tmp/worker.sh
