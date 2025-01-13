@@ -31,7 +31,6 @@ Ensure your host machine has the following software installed:
 
    ```bash
    git clone https://github.com/Maalshekto/kubedev.git
-cd kubedev
    cd kubedev
    ```
 ### **Configure Parameters (Optional)**
