@@ -1,0 +1,9 @@
+# Vagrant files
+.vagrant/
+
+# Kubernetes join command script
+join_command.sh
+
+# Optional: Ignore shell script temporary files
+*.swp
+*.swo
