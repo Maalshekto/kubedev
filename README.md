@@ -33,84 +33,91 @@ Ensure your host machine has the following software installed:
    git clone https://github.com/yourusername/kubedev.git
    cd kubedev
    ```
-Configure Parameters (Optional)
+2. **Configure Parameters (Optional)**
 
-Edit the config.yml file to customize IP addresses, memory, CPU allocations, and the number of worker nodes as needed.
-Start the Cluster
+Edit the **config.yml** file to customize IP addresses, memory, CPU allocations, and the number of worker nodes as needed.
+
+3. **Start the Cluster**
 
 Run the following command to initialize and provision the Kubernetes cluster:
 
-bash
-Copier le code
-vagrant up
+   ```bash
+   vagrant up
+   ```
 This command will create and configure the master and worker nodes based on the provided Vagrantfile and config.yml.
-Accessing the Cluster
+
+4. **Accessing the Cluster**
 SSH into the Master Node
 
-bash
-Copier le code
+```bash
 vagrant ssh controlplane
-Verify Kubernetes is Running
+```
+
+5. **Verify Kubernetes is Running**
 
 Once inside the master node, check the status of the nodes and pods:
-
-bash
-Copier le code
+```bash
 kubectl get nodes
 kubectl get pods --all-namespaces
+```
 You should see the master node and all worker nodes listed as Ready.
 Kubernetes system pods should be in the Running state.
-Testing the Cluster
+
+6. **Testing the Cluster**
 To ensure your Kubernetes cluster is functioning correctly, you can deploy a simple application:
 
-Deploy a Sample Application
-
-bash
-Copier le code
+6.1 **Deploy a Sample Application**
+```bash
 kubectl create deployment hello-node --image=k8s.gcr.io/echoserver:1.4
 kubectl expose deployment hello-node --type=NodePort --port=8080
-Retrieve the Service URL
+```
 
-bash
-Copier le code
+6.2 **Retrieve the Service URL**
+```bash
 kubectl get services hello-node
+```
 Note the NodePort assigned to the service (e.g., 30007).
-Access the Application
 
+6.3 **Access the Application**
 Open a web browser and navigate to http://<master_ip>:<NodePort>, for example:
 
-arduino
-Copier le code
+```arduino
 http://192.168.100.10:30007
+```
 You should see a response from the hello-node application, confirming that the cluster is operational.
-Stopping the Cluster
+
+7. **Stopping the Cluster
 To stop all running Vagrant machines without destroying them:
 
-bash
-Copier le code
+```bash
 vagrant halt
-Destroying the Cluster
+```
+
+8. **Destroying the Cluster**
 To remove all Vagrant machines and associated resources:
 
-bash
-Copier le code
+```bash
 vagrant destroy -f
+```
 Note: This action is irreversible and will delete all data on the virtual machines.
 
-Troubleshooting
+**Troubleshooting**
 DNS Resolution Issues:
 
 Ensure your host machine has a stable internet connection.
 Disable VPNs or firewalls that might block DNS queries.
+
 Provisioning Failures:
 
 Re-run vagrant up to retry provisioning.
 Check logs by SSHing into the affected node and inspecting service logs (e.g., Docker, kubelet).
+
 Kubernetes Components Not Ready:
 
 Verify that all nodes are listed as Ready using kubectl get nodes.
 Ensure sufficient resources (CPU, RAM) are allocated to each VM.
-License
+
+**License**
 This project is licensed under the MIT License.
 
-Disclaimer: This setup is intended for development and testing purposes. For production environments, consider using more robust deployment methods and following Kubernetes best practices.
+**Disclaimer**: This setup is intended for development and testing purposes. For production environments, consider using more robust deployment methods and following Kubernetes best practices.
