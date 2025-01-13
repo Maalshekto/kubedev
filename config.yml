@@ -1,0 +1,44 @@
+build_mode: "PRIVATE" # Options: "PRIVATE" or "BRIDGE"
+private_ip_prefix: "192.168.100"
+cluster_cidr: "10.244.0.0/16"
+ip_master_suffix: 10
+ip_worker_suffix: 20
+num_workers: 2
+
+master:
+  hostname: "controlplane"
+  memory: 4096
+  cpus: 4
+  name: "controlplane"
+  natdnsproxy: true
+  natdnshostresolver: true
+  forwarded_ports:
+    ssh_guest: 22
+    ssh_host_start: 2710
+
+workers:
+  base_hostname: "worker"
+  memory: 4096
+  cpus: 2
+  natdnsproxy: true
+  natdnshostresolver: true
+  forwarded_ports:
+    ssh_guest: 22
+    ssh_host_start: 2720
+
+docker:
+  gpg_url: "https://download.docker.com/linux/ubuntu/gpg"
+  repo_url: "https://download.docker.com/linux/ubuntu"
+  repo_distribution: "focal"
+  repo_component: "stable"
+
+kubernetes:
+  gpg_url: "https://pkgs.k8s.io/core:/stable:/v1.31/deb/Release.key"
+  repo_url: "https://pkgs.k8s.io/core:/stable:/v1.31/deb/"
+  repo_distribution: "/"
+  repo_component: ""
+  calico_manifest_url: "https://raw.githubusercontent.com/projectcalico/calico/v3.29.1/manifests/calico.yaml"
+
+provision:
+  timeout: 600 # secondes
+  join_cmd_ttl: "24h"
