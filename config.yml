@@ -38,6 +38,8 @@ kubernetes:
   repo_distribution: "/"
   repo_component: ""
   calico_manifest_url: "https://raw.githubusercontent.com/projectcalico/calico/v3.29.1/manifests/calico.yaml"
+  cilium_latest_version_url: "https://raw.githubusercontent.com/cilium/cilium-cli/main/stable.txt"
+  cni: "cilium"
 
 provision:
   timeout: 600 # secondes

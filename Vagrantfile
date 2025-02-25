@@ -108,7 +108,9 @@ Vagrant.configure("2") do |config|
       KUBERNETES_GPG_URL=#{KUBERNETES_CONFIG['gpg_url']} KUBERNETES_REPO_URL=#{KUBERNETES_CONFIG['repo_url']} \
       KUBERNETES_REPO_DISTRIBUTION=#{KUBERNETES_CONFIG['repo_distribution']} KUBERNETES_REPO_COMPONENT=#{KUBERNETES_CONFIG['repo_component']} \
       CLUSTER_CIDR=#{CLUSTER_CIDR} CALICO_MANIFEST_URL=#{KUBERNETES_CONFIG['calico_manifest_url']} \
+      CILIUM_LATEST_VERSION_URL=#{KUBERNETES_CONFIG['cilium_latest_version_url']} \
       PROVISION_TIMEOUT=#{PROVISION_CONFIG['timeout']} PROVISION_JOIN_CMD_TTL=#{PROVISION_CONFIG['join_cmd_ttl']} \
+      CNI=#{KUBERNETES_CONFIG['cni']} \
       /tmp/master.sh
     SHELL
   end

@@ -66,12 +66,37 @@ sudo -u vagrant -i bash -c "
   sudo chown vagrant:vagrant /home/vagrant/.kube/config;   
 "
 
-# Install Calico
 mkdir -p $HOME/.kube
 sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
-curl "${CALICO_MANIFEST_URL}" -O
-kubectl apply -f calico.yaml
+
+case "${CNI}" in 
+  "calico")
+    # Install Calico
+    curl "${CALICO_MANIFEST_URL}" -O
+    kubectl apply -f calico.yaml
+    ;;
+
+  "cilium")
+    # Install Cilium
+    sudo apt-get install -y iproute2
+    CILIUM_CLI_VERSION=$(curl -s $CILIUM_LATEST_VERSION_URL)
+    CLI_ARCH=amd64
+    if [ "$(uname -m)" = "aarch64" ]; then CLI_ARCH=arm64; fi
+    curl -L --fail --remote-name-all https://github.com/cilium/cilium-cli/releases/download/$CILIUM_CLI_VERSION/cilium-linux-$CLI_ARCH.tar.gz{,.sha256sum}
+    sha256sum --check cilium-linux-$CLI_ARCH.tar.gz.sha256sum
+    sudo tar xzvfC cilium-linux-$CLI_ARCH.tar.gz /usr/local/bin
+    rm cilium-linux-$CLI_ARCH.tar.gz{,.sha256sum}
+    cilium install --kubeconfig $HOME/.kube/config \
+      --helm-set config.sourceIpVerification=false \
+      --helm-set ipam.mode=cluster-pool \
+      --helm-set ipam.operator.clusterPoolIPv4PodCIDRList={$CLUSTER_CIDR}
+    ;;
+
+  *)
+    echo "[ERROR] No CNI specified"
+    ;;
+esac
 
 # Wait for the master node to be ready
 kubectl wait node $(hostname) --for=condition=Ready --timeout=${PROVISION_TIMEOUT}s
