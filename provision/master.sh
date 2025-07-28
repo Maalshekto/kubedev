@@ -87,10 +87,19 @@ case "${CNI}" in
     sha256sum --check cilium-linux-$CLI_ARCH.tar.gz.sha256sum
     sudo tar xzvfC cilium-linux-$CLI_ARCH.tar.gz /usr/local/bin
     rm cilium-linux-$CLI_ARCH.tar.gz{,.sha256sum}
+    #cilium install --kubeconfig $HOME/.kube/config \
+    #  --helm-set ipam.mode=kubernetes \
+    #  --helm-set routingMode=native \
+    #  --helm-set ipv4NativeRoutingCIDR=$CLUSTER_CIDR \
+    #  --helm-set bgpControlPlane.enabled=true \
+    #  --helm-set k8s.requireIPv4PodCIDR=true
     cilium install --kubeconfig $HOME/.kube/config \
-      --helm-set config.sourceIpVerification=false \
       --helm-set ipam.mode=cluster-pool \
-      --helm-set ipam.operator.clusterPoolIPv4PodCIDRList={$CLUSTER_CIDR}
+      --helm-set ipam.operator.clusterPoolIPv4PodCIDRList={$CLUSTER_CIDR} \
+      --helm-set routingMode=native \
+      --helm-set ipv4NativeRoutingCIDR=192.168.100.0/24 \
+      --helm-set autoDirectNodeRoutes=true 
+
     ;;
 
   *)
@@ -106,3 +115,16 @@ KUBEADM_JOIN_CMD=$(kubeadm token create --print-join-command --ttl ${PROVISION_J
 # Save the join command to a file for the worker nodes
 echo "$KUBEADM_JOIN_CMD" > /vagrant/join_command.sh
 chmod +x /vagrant/join_command.sh
+
+# Install Helm
+curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
+chmod 700 get_helm.sh
+./get_helm.sh
+
+# Install zsh and oh-my-zsh
+sudo apt-get install -y zsh
+sudo -u vagrant bash -c 'yes y | CHSH=yes RUNZSH=no sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"'
+# Vérifier si "kubectl" est déjà dans le fichier; si non, on l’ajoute
+grep -q "kubectl" /home/vagrant/.zshrc || sed -i '/^plugins=(/ s/)/ kubectl)/' /home/vagrant/.zshrc
+sed -i "s/^ZSH_THEME=.*/ZSH_THEME=\"${ZSH_THEME}\"/" /home/vagrant/.zshrc
+sudo chsh -s /usr/bin/zsh vagrant

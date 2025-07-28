@@ -111,6 +111,7 @@ Vagrant.configure("2") do |config|
       CILIUM_LATEST_VERSION_URL=#{KUBERNETES_CONFIG['cilium_latest_version_url']} \
       PROVISION_TIMEOUT=#{PROVISION_CONFIG['timeout']} PROVISION_JOIN_CMD_TTL=#{PROVISION_CONFIG['join_cmd_ttl']} \
       CNI=#{KUBERNETES_CONFIG['cni']} \
+      ZSH_THEME=#{MASTER_CONFIG['zsh_theme']} \
       /tmp/master.sh
     SHELL
   end

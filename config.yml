@@ -6,18 +6,19 @@ ip_worker_suffix: 20
 num_workers: 2
 
 master:
-  hostname: "controlplane"
+  hostname: "rag-controlplane"
   memory: 4096
   cpus: 4
-  name: "controlplane"
+  name: "rag-controlplane"
   natdnsproxy: true
   natdnshostresolver: true
   forwarded_ports:
     ssh_guest: 22
     ssh_host_start: 2710
+  zsh_theme: "fishy"
 
 workers:
-  base_hostname: "worker"
+  base_hostname: "rag-worker-"
   memory: 4096
   cpus: 2
   natdnsproxy: true
